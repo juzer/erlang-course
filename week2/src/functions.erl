@@ -68,13 +68,3 @@ palindrome_test() ->
   true = palindrome("Madam I\'m Adam"),
   false = palindrome("bAAbo   "),
   true = palindrome(" .ijtu=++ +; uT,Ji75").
-
-
-foo([X|Xs]) -> bar(foo(Xs),[X]);
-foo([])     -> [].
-
-bar([],Ys) -> Ys;
-bar([Z|Zs],Ys) -> [Z|bar(Zs,Ys)].
-
-foo_test() ->
-  true = foo([1, 2, 3, 4, 5]).
