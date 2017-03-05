@@ -80,8 +80,8 @@ modes([X | Xs], R) ->
 %% Create a list of tuples {X, N}, where X is a unique item from list R and N is the number of its repetitions in R
 calculate_repetitions(X, R) ->
   case filter(X, R, []) of
-    {R, {}} -> R ++ [{X, 1}]; %% X not found
-    {Rf, {X, N}} -> Rf ++ [{X, N + 1}] %% X with N repetitions found
+    {R, {}} -> [{X, 1} | R]; %% X not found
+    {Rf, {X, N}} -> [{X, N + 1} | Rf] %% X with N repetitions found
   end.
 
 %% If list R contains element X - returns a tuple {R-X, {X, N}}, where N is number of repetitions
@@ -106,7 +106,7 @@ max_repetitions([{X, N} | Rs], NMax, _) when (N > NMax) ->
   max_repetitions(Rs, N, [X]);
 
 max_repetitions([{X, N} | Rs], NMax, Max) when (N == NMax) ->
-  max_repetitions(Rs, N, Max ++ [X]);
+  max_repetitions(Rs, N, [X | Max]);
 
 max_repetitions([{_, N} | Rs], NMax, Max) when (N < NMax) ->
   max_repetitions(Rs, NMax, Max).
