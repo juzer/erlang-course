@@ -35,44 +35,30 @@ evens_test() ->
 
 %% the median of a list of numbers: this is the middle element when the list is ordered
 %% (if the list is of even length you should average the middle two)
-median([X]) -> X;
-
 median(X) ->
   S = lists:sort(X),
-  L = length(S),
-  middle(S, L).
+  middle(S, length(S)).
 
-middle(S, L) ->
-  case (L rem 2) of
-    0 -> sum(elems(S, (L div 2) - 1, 2)) / 2;
-    1 ->
-      [X | _] = elems(S, (L div 2), 1),
-      X
-  end.
+%% Finds the middle element(s) of list S
+middle(S, L) when (L rem 2) == 0 ->
+  sum(elems(S, (L div 2) - 1, 2)) / 2;
+
+middle(S, L) when (L rem 2) == 1 ->
+  [X | _] = elems(S, (L div 2), 1),
+  X.
 
 sum([]) -> 0;
 
-sum([X, Xs]) ->
-  X + sum(Xs);
-
-sum(X) -> X.
+sum([X | Xs]) ->
+  X + sum(Xs).
 
 %% Return N elements of list S starting from index I
-elems(S, 0, N) ->
-  items(S, N);
+elems([S1 | _], 0, 1) -> [S1];
+
+elems([S1, S2 | _], 0, 2) -> [S1, S2];
 
 elems([_ | Ss], I, N) ->
   elems(Ss, I - 1, N).
-
-%% Return N first elements of list S
-items(S, N) ->
-  items(S, N, []).
-
-items(_, 0, Acc) ->
-  Acc;
-
-items([S | Ss], N, Acc) ->
-  items(Ss, N - 1, Acc ++ [S]).
 
 median_test() ->
   2 = median([1, 2, 3]),
@@ -83,8 +69,6 @@ median_test() ->
 %% the modes of a list of numbers: this is a list consisting of the numbers
 %% that occur most frequently in the list; if there is is just one,
 %% this will be a list with one element only
-modes([X]) -> [X];
-
 modes(X) ->
   modes(X, []).
 
@@ -93,6 +77,7 @@ modes([], R) -> max_repetitions(R);
 modes([X | Xs], R) ->
   modes(Xs, calculate_repetitions(X, R)).
 
+%% Create a list of tuples {X, N}, where X is a unique item from list R and N is the number of its repetitions in R
 calculate_repetitions(X, R) ->
   case filter(X, R, []) of
     {R, {}} -> R ++ [{X, 1}]; %% X not found
@@ -110,6 +95,7 @@ filter(X, [R | Rs], RAcc) ->
     _ -> filter(X, Rs, RAcc ++ [R])
   end.
 
+%% Get a list of items with highest repetitions
 max_repetitions([{X, N} | Rs]) ->
   max_repetitions(Rs, N, [X]).
 
