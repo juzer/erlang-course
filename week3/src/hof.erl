@@ -79,3 +79,44 @@ product_hof_test() ->
   12 = product_hof([-3, -4]),
   12 = product_hof([3, 4]),
   0 = product_hof([3, 4, 6, -9, 0]).
+
+
+
+
+zip(X, Y) ->
+  zip(X, Y, []).
+
+zip([X | Xs], [Y | Ys], R) ->
+  zip(Xs, Ys, [{X, Y} | R]);
+
+zip(_, _, R) -> lists:reverse(R).
+
+zip_test() ->
+  [{1, 2}, {3, 4}] = zip([1, 3, 5, 7], [2, 4]).
+
+
+
+zip_with(F, X, Y) ->
+  zip_with(F, X, Y, []).
+
+zip_with(F, [X | Xs], [Y | Ys], R) ->
+  zip_with(F, Xs, Ys, [F(X, Y) | R]);
+
+zip_with(_, _, _, R) -> lists:reverse(R).
+
+zip_with_test() ->
+  [3, 7] = zip_with(fun(X, Y) -> X + Y end, [1, 3, 5, 7], [2, 4]).
+
+
+
+zip_with_map(F, X, Y) -> lists:map(fun({A, B}) -> F(A, B) end, zip(X, Y)).
+
+zip_with_map_test() ->
+  [3, 7] = zip_with_map(fun(X, Y) -> X + Y end, [1, 3, 5, 7], [2, 4]).
+
+
+
+zip_zip(X, Y) -> zip_with(fun(A, B) -> {A, B} end, X, Y).
+
+zip_zip_test() ->
+  [{1, 2}, {3, 4}] = zip_zip([1, 3, 5, 7], [2, 4]).
